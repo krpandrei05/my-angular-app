@@ -12,7 +12,7 @@
       <tr>
         <td>{{ task.dueDate }}</td>
         <td>{{ task.taskName }}</td>
-        <td>{{ task.statusName }}</td>
+        <td>{{ getStatusName(task.statusTypeId) }}</td>
       </tr>
     }
   </tbody>
