@@ -1,0 +1,19 @@
+<table>
+  <thead>
+  <tr>
+    <th>Due Date</th>
+    <th>Subject</th>
+    <th>Status</th>
+  </tr>
+  </thead>
+
+  <tbody>
+    @for (task of tasks(); track task.taskId) {
+      <tr>
+        <td>{{ task.dueDate }}</td>
+        <td>{{ task.taskName }}</td>
+        <td>{{ task.statusName }}</td>
+      </tr>
+    }
+  </tbody>
+</table>

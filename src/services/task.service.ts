@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class TasksService {
+export class TaskService {
   private http = inject(HttpClient);
 
   getTasks() {
