@@ -1,9 +1,12 @@
 import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Task, TaskService } from '../services/task.service';
-import { StatusType, StatusTypeService } from '../services/status-type.service';
-import { User, UserService } from '../services/user.service';
+import { TaskService } from '../services/task.service';
+import { Task } from '../models/task.model';
+import { StatusTypeService } from '../services/status-type.service';
+import { StatusType } from '../models/status-type.model';
+import { UserService } from '../services/user.service';
+import { User } from '../models/user.model';
 
 @Component({
   selector: 'app-new-task',

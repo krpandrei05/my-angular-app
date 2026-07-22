@@ -1,15 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-
-export interface Task {
-  taskId?: number;
-  taskName: string;
-  statusTypeId: string;
-  userId: number;
-  dueDate: string;
-  createdBy?: string;
-  creationDate?: string;
-}
+import { Task } from '../models/task.model';
 
 @Injectable({
   providedIn: 'root',

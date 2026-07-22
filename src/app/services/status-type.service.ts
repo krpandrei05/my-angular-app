@@ -1,12 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-
-export interface StatusType {
-  statusTypeId: string;
-  statusName: string;
-  createdBy: string;
-  creationDate: Date;
-}
+import { StatusType } from '../models/status-type.model';
 
 @Injectable({
   providedIn: 'root',

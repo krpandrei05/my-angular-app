@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TaskService, Task } from '../services/task.service';
+import { TaskService } from '../services/task.service';
+import { Task } from '../models/task.model';
 import { StatusTypeService } from '../services/status-type.service';
 import { NewTask } from '../new-task/new-task';
 import { UserService } from '../services/user.service';
