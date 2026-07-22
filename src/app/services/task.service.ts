@@ -28,4 +28,8 @@ export class TaskService {
   updateTask(taskId: number, task: Task) {
     return this.http.put<Task>(`http://localhost:8080/tasks/${taskId}`, task);
   }
+
+  deleteTask(taskId: number) {
+    return this.http.delete<void>(`http://localhost:8080/tasks/${taskId}`);
+  }
 }

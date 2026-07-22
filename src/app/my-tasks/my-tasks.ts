@@ -58,4 +58,11 @@ export class MyTasks implements OnInit {
       () => {},
     );
   }
+
+  deleteTask(task: Task): void {
+    if (!task.taskId) {
+      return;
+    }
+    this.taskService.deleteTask(task.taskId).subscribe(() => this.loadTasks());
+  }
 }

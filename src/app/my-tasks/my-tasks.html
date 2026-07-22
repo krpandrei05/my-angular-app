@@ -17,7 +17,8 @@
         <td>{{ task.taskName }}</td>
         <td>{{ getStatusName(task.statusTypeId) }}</td>
         <td>
-          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="openEditTaskModal(task)">Edit</button>
+          <button type="button" class="btn btn-sm btn-danger mr-2" (click)="deleteTask(task)">Delete</button>
+          <button type="button" class="btn btn-sm btn-primary" (click)="openEditTaskModal(task)">Edit</button>
         </td>
       </tr>
     }
