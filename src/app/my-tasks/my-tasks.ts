@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskService, Task } from '../services/task.service';
 import { StatusTypeService } from '../services/status-type.service';
 import { NewTask } from '../new-task/new-task';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-my-tasks',
@@ -14,10 +15,12 @@ import { NewTask } from '../new-task/new-task';
 export class MyTasks implements OnInit {
   private taskService = inject(TaskService);
   private statusTypeService = inject(StatusTypeService);
+  private userService = inject(UserService);
   private modalService = inject(NgbModal);
 
   tasks = signal<Task[]>([]);
   private statusMap = new Map<string, string>();
+  private userMap = new Map<number, string>();
 
   ngOnInit(): void {
     this.loadTasks();
@@ -27,9 +30,10 @@ export class MyTasks implements OnInit {
     forkJoin({
       tasks: this.taskService.getTasks(),
       statuses: this.statusTypeService.getStatuses(),
-    }).subscribe(({ tasks, statuses }) => {
+      users: this.userService.getUsers(),
+    }).subscribe(({ tasks, statuses, users }) => {
       this.statusMap = new Map(statuses.map((s) => [s.statusTypeId, s.statusName]));
-
+      this.userMap = new Map(users.map((u) => [u.userId, u.username]));
       const sorted = [...tasks].sort(
         (a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime(),
       );
@@ -40,6 +44,10 @@ export class MyTasks implements OnInit {
 
   getStatusName(statusTypeId: string): string {
     return this.statusMap.get(statusTypeId) ?? statusTypeId;
+  }
+
+  getUserName(userId: number): string{
+    return this.userMap.get(userId) ?? String(userId);
   }
 
   openNewTaskModal(): void {

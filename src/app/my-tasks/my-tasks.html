@@ -1,26 +1,34 @@
-<button type="button" class="btn btn-primary mb-3" (click)="openNewTaskModal()">New Task</button>
+<div class="page-container">
+  <div class="d-flex justify-content-end mb-4">
+    <button type="button" class="btn btn-secondary" (click)="openNewTaskModal()">Add Task</button>
+  </div>
 
-<table class="table">
-  <thead>
-  <tr>
-    <th>Due Date</th>
-    <th>Subject</th>
-    <th>Status</th>
-    <th></th>
-  </tr>
-  </thead>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Task Name</th>
+      <th>Due Date</th>
+      <th>Status</th>
+      <th>Assigned User</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
 
-  <tbody>
-    @for (task of tasks(); track task.taskId) {
-      <tr>
-        <td>{{ task.dueDate }}</td>
-        <td>{{ task.taskName }}</td>
-        <td>{{ getStatusName(task.statusTypeId) }}</td>
-        <td>
-          <button type="button" class="btn btn-sm btn-danger mr-2" (click)="deleteTask(task)">Delete</button>
-          <button type="button" class="btn btn-sm btn-primary" (click)="openEditTaskModal(task)">Edit</button>
-        </td>
-      </tr>
-    }
-  </tbody>
-</table>
+    <tbody>
+      @for (task of tasks(); track task.taskId) {
+        <tr>
+          <td>{{ task.taskId }}</td>
+          <td>{{ task.taskName }}</td>
+          <td>{{ task.dueDate }}</td>
+          <td>{{ getStatusName(task.statusTypeId) }}</td>
+          <td>{{ getUserName(task.userId) }}</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-danger mr-2" (click)="deleteTask(task)">Delete</button>
+            <button type="button" class="btn btn-sm btn-primary" (click)="openEditTaskModal(task)">Edit</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
