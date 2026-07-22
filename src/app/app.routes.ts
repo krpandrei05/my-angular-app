@@ -4,7 +4,7 @@ import { MyTasks } from './my-tasks/my-tasks';
 import { Search } from './search/search';
 
 export const routes: Routes = [
-    {path: 'home', component: Homepage},
+    {path: 'homepage', component: Homepage},
     {path: 'my-tasks', component: MyTasks},
     {path: 'search', component: Search}
 ];
