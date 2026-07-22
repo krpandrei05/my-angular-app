@@ -1,9 +1,12 @@
-<table>
+<button type="button" class="btn btn-primary mb-3" (click)="openNewTaskModal()">New Task</button>
+
+<table class="table">
   <thead>
   <tr>
     <th>Due Date</th>
     <th>Subject</th>
     <th>Status</th>
+    <th></th>
   </tr>
   </thead>
 
@@ -13,6 +16,9 @@
         <td>{{ task.dueDate }}</td>
         <td>{{ task.taskName }}</td>
         <td>{{ getStatusName(task.statusTypeId) }}</td>
+        <td>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="openEditTaskModal(task)">Edit</button>
+        </td>
       </tr>
     }
   </tbody>
