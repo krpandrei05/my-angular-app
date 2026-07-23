@@ -3,6 +3,32 @@
     <button type="button" class="btn btn-secondary" (click)="openNewTaskModal()">Add Task</button>
   </div>
 
+  <div class="row g-2 mb-3">
+    <div class="col-auto">
+      <input type="text" class="form-control" placeholder="Subject" [(ngModel)]="filters.taskName" name="taskName">
+    </div>
+    <div class="col-auto">
+      <select class="form-control" [(ngModel)]="filters.statusName" name="statusName">
+        <option value="">All statuses</option>
+        @for (status of statusTypes(); track status.statusTypeId) {
+          <option [value]="status.statusName">{{ status.statusName }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-auto">
+      <input type="text" class="form-control" placeholder="Assigned to" [(ngModel)]="filters.username" name="username">
+    </div>
+    <div class="col-auto">
+      <input type="date" class="form-control" [(ngModel)]="filters.dueDate" name="dueDate">
+    </div>
+    <div class="col-auto">
+      <button type="button" class="btn btn-primary" (click)="search()">Search</button>
+    </div>
+    <div class="col-auto">
+      <button type="button" class="btn btn-secondary" (click)="resetFilters()">Reset</button>
+    </div>
+  </div>
+
   <table class="table table-bordered">
     <thead>
     <tr>

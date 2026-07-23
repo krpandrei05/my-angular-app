@@ -6,10 +6,12 @@ import { Task } from '../models/task.model';
 import { StatusTypeService } from '../services/status-type.service';
 import { NewTask } from '../new-task/new-task';
 import { UserService } from '../services/user.service';
+import { FormsModule } from '@angular/forms';
+import { StatusType } from '../models/status-type.model';
 
 @Component({
   selector: 'app-my-tasks',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './my-tasks.html',
   styleUrl: './my-tasks.css',
 })
@@ -20,6 +22,15 @@ export class MyTasks implements OnInit {
   private modalService = inject(NgbModal);
 
   tasks = signal<Task[]>([]);
+  statusTypes = signal<StatusType[]>([]);
+
+  filters = {
+    taskName: '',
+    statusName: '',
+    username: '',
+    dueDate: '',
+  };
+
   private statusMap = new Map<string, string>();
   private userMap = new Map<number, string>();
 
@@ -34,20 +45,34 @@ export class MyTasks implements OnInit {
       users: this.userService.getUsers(),
     }).subscribe(({ tasks, statuses, users }) => {
       this.statusMap = new Map(statuses.map((s) => [s.statusTypeId, s.statusName]));
+      this.statusTypes.set(statuses);
       this.userMap = new Map(users.map((u) => [u.userId, u.username]));
       const sorted = [...tasks].sort(
         (a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime(),
       );
-
       this.tasks.set(sorted);
     });
+  }
+
+  search(): void {
+    this.taskService.searchTasks(this.filters).subscribe((tasks) => {
+      const sorted = [...tasks].sort(
+        (a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime(),
+      );
+      this.tasks.set(sorted);
+    });
+  }
+
+  resetFilters(): void {
+    this.filters = { taskName: '', statusName: '', username: '', dueDate: '' };
+    this.loadTasks();
   }
 
   getStatusName(statusTypeId: string): string {
     return this.statusMap.get(statusTypeId) ?? statusTypeId;
   }
 
-  getUserName(userId: number): string{
+  getUserName(userId: number): string {
     return this.userMap.get(userId) ?? String(userId);
   }
 
