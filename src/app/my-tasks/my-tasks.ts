@@ -8,6 +8,7 @@ import { NewTask } from '../new-task/new-task';
 import { UserService } from '../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { StatusType } from '../models/status-type.model';
+import { Header } from '../header/header';
 
 @Component({
   selector: 'app-my-tasks',

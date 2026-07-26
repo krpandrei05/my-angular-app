@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MyTasks } from '../my-tasks/my-tasks';
 import { UserService } from '../services/user.service';
+import { Header } from '../header/header';
 
 @Component({
   selector: 'app-homepage',
