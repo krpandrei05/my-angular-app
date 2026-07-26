@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from '../models/user.model';
-import { Credentials, RegisterCredentials, UserResponse } from '../models/credentials.model';
+import { Credentials, CurrentUser, RegisterCredentials } from '../models/credentials.model';
 import { Router } from '@angular/router';
 import LocalStorageUtils from '../utils/local-storage-utils';
 
@@ -39,5 +39,9 @@ export class UserService {
   logout() {
     LocalStorageUtils.deleteItem(LocalStorageUtils.tokenKey);
     this.router.navigate(['/auth']);
+  }
+
+  getCurrentUser() {
+    return this.http.get<CurrentUser>('/auth/me');
   }
 }

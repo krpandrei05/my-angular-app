@@ -1,0 +1,6 @@
+<div class="app-header d-flex align-items-center justify-content-end px-3 py-2">
+  <img src="/eos_logo.png" alt="EOS IT Summer School" class="header-logo">
+  @if (currentUser()) {
+    <span class="header-username">{{ currentUser()!.username }}</span>
+  }
+</div>

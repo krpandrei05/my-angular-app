@@ -10,7 +10,7 @@ export interface RegisterCredentials {
   birthDate: string;
 }
 
-export interface UserResponse {
+export interface CurrentUser {
   userId: number;
   username: string;
   email: string;
