@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { Credentials, RegisterCredentials } from '../models/credentials.model';
 import LocalStorageUtils from '../utils/local-storage-utils';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-auth',
   imports: [FormsModule],
   templateUrl: './auth.html',
   styleUrl: './auth.css',
@@ -37,11 +38,16 @@ export class Auth {
     if (this.isLoginMode) {
       this.userService.login(this.loginForm).subscribe({
         next: (token) => {
+          console.log('Login successful')
           LocalStorageUtils.setItem(LocalStorageUtils.tokenKey, token);
           this.router.navigate(['/homepage']);
         },
-        error: (err) => {
-          console.error('Login failed', err);
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 403) {
+            console.error('Login failed: Incorrect email or password');
+          } else {
+            console.error('Login failed', err);
+          }
         },
       });
     } else {
@@ -49,8 +55,12 @@ export class Auth {
         next: () => {
           this.isLoginMode = true;
         },
-        error: (err) => {
-          console.error('Register failed', err);
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 409) {
+            console.error('Register failed: Email already registered');
+          } else {
+            console.error('Register failed', err);
+          }
         },
       });
     }
