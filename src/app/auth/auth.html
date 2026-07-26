@@ -1,5 +1,8 @@
-<div class="page-container">
-  <div class="auth-card">
+<div class="page-container d-flex align-items-center justify-content-center">
+  <div class="auth-card shadow-sm p-4">
+    <div class="auth-logo-wrapper">
+      <img src="/eos_logo.png" alt="EOS IT Summer School" class="auth-logo">
+    </div>
     <h2>{{ isLoginMode ? 'Login' : 'Register' }}</h2>
 
     @if (isLoginMode) {

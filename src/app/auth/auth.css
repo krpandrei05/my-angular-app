@@ -1,3 +1,35 @@
 .page-container {
-  padding: 2rem;
+  min-height: 100vh;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-logo-wrapper {
+  width: 112px;
+  height: 112px;
+  background-color: #000;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.auth-logo {
+  width: 96px;
+  height: 96px;
+  display: block;
+}
+
+.auth-card .btn-primary {
+  background-color: #cf3034;
+  border-color: #cf3034;
+}
+
+.auth-card .btn-primary:hover {
+  background-color: #b32328;
+  border-color: #b32328;
 }
