@@ -1,14 +1,15 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
+import LocalStorageUtils from '../utils/local-storage-utils';
 
 export const loggedInGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const user = localStorage.getItem('user');
+  const token = LocalStorageUtils.getItem(LocalStorageUtils.tokenKey);
 
-  if (user) {
+  if (token) {
     return true;
   }
 
-  router.navigate(['/login']);
+  router.navigate(['/auth']);
   return false;
 };

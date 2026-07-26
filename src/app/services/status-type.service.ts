@@ -9,6 +9,6 @@ export class StatusTypeService {
   private http = inject(HttpClient);
 
   getStatuses() {
-    return this.http.get<StatusType[]>('http://localhost:8080/statuses');
+    return this.http.get<StatusType[]>('/statuses');
   }
 }

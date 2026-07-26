@@ -10,15 +10,25 @@ export class UserService {
   private http = inject(HttpClient);
 
   getUsers() {
-    return this.http.get<User[]>('http://localhost:8080/users');
+    return this.http.get<User[]>('/users');
   }
 
   login(credentials: Credentials) {
-    return this.http.post<UserResponse>('http://localhost:8080/users/login', credentials);
+    const encoded = {
+      email: btoa(credentials.email),
+      password: btoa(credentials.password),
+    }
+    return this.http.post('/auth/login', encoded, { responseType: 'text' });
   }
 
   register(credentials: RegisterCredentials) {
-    const payload = { ...credentials, isInternal: 0, createdBy: credentials.username };
-    return this.http.post<User>('http://localhost:8080/users', payload);
+    const payload = {
+      username: btoa(credentials.username),
+      email: btoa(credentials.email),
+      password: btoa(credentials.password),
+      birthDate: credentials.birthDate,
+      isInternal: 0,
+      createdBy: credentials.username, };
+    return this.http.post('/auth/register', payload, { responseType: 'text' });
   }
 }

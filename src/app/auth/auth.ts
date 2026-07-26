@@ -3,14 +3,15 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { Credentials, RegisterCredentials } from '../models/credentials.model';
+import LocalStorageUtils from '../utils/local-storage-utils';
 
 @Component({
   selector: 'app-login',
   imports: [FormsModule],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  templateUrl: './auth.html',
+  styleUrl: './auth.css',
 })
-export class Login {
+export class Auth {
   private userService = inject(UserService);
   private router = inject(Router);
 
@@ -35,8 +36,8 @@ export class Login {
   onSubmit(): void {
     if (this.isLoginMode) {
       this.userService.login(this.loginForm).subscribe({
-        next: (response) => {
-          localStorage.setItem('user', JSON.stringify(response));
+        next: (token) => {
+          LocalStorageUtils.setItem(LocalStorageUtils.tokenKey, token);
           this.router.navigate(['/homepage']);
         },
         error: (err) => {
@@ -45,9 +46,8 @@ export class Login {
       });
     } else {
       this.userService.register(this.registerForm).subscribe({
-        next: (response) => {
-          localStorage.setItem('user', JSON.stringify(response));
-          this.router.navigate(['/homepage']);
+        next: () => {
+          this.isLoginMode = true;
         },
         error: (err) => {
           console.error('Register failed', err);
