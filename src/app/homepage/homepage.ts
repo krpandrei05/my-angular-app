@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MyTasks } from '../my-tasks/my-tasks';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-homepage',
@@ -7,4 +8,10 @@ import { MyTasks } from '../my-tasks/my-tasks';
   templateUrl: './homepage.html',
   styleUrl: './homepage.css',
 })
-export class Homepage {}
+export class Homepage {
+  private userService = inject(UserService);
+
+  onLogout(): void {
+    this.userService.logout();
+  }
+}
