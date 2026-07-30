@@ -6,4 +6,5 @@ export interface User {
   isInternal: number;
   createdBy: string;
   creationDate: Date;
+  roleName: string;
 }

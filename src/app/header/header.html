@@ -1,5 +1,8 @@
 <div class="app-header d-flex align-items-center justify-content-end px-3 py-2">
   <img src="/eos_logo.png" alt="EOS IT Summer School" class="header-logo">
+  @if (userService.currentUser()?.roleName === 'ADMIN') {
+    <a routerLink="/admin" class="header-admin-link mx-3">Admin</a>
+  }
   @if (userService.currentUser()) {
     <span class="header-username">{{ userService.currentUser()!.username }}</span>
   }

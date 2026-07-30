@@ -10,3 +10,13 @@
 .header-username {
   font-weight: 600;
 }
+
+.header-admin-link {
+  color: #cf3034;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.header-admin-link:hover {
+  text-decoration: underline;
+}

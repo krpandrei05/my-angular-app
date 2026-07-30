@@ -20,6 +20,10 @@ export class UserService {
     return this.http.get<User[]>('/users');
   }
 
+  updateUserRole(userId: number, roleName: string) {
+    return this.http.put<User>(`/users/${userId}/role`, { roleName });
+  }
+
   login(credentials: Credentials) {
     const encoded = {
       email: btoa(credentials.email),
@@ -46,8 +50,6 @@ export class UserService {
   }
 
   getCurrentUser() {
-    return this.http.get<CurrentUser>('/auth/me').pipe(
-      tap((user) => this.currentUser.set(user))
-    );
+    return this.http.get<CurrentUser>('/auth/me').pipe(tap((user) => this.currentUser.set(user)));
   }
 }
