@@ -19,7 +19,7 @@ import { Header } from '../header/header';
 export class MyTasks implements OnInit {
   private taskService = inject(TaskService);
   private statusTypeService = inject(StatusTypeService);
-  private userService = inject(UserService);
+  protected userService = inject(UserService);
   private modalService = inject(NgbModal);
 
   tasks = signal<Task[]>([]);

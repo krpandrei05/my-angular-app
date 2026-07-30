@@ -1,6 +1,5 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service';
-import { CurrentUser } from '../models/credentials.model';
 
 @Component({
   selector: 'app-header',
@@ -9,14 +8,11 @@ import { CurrentUser } from '../models/credentials.model';
   styleUrl: './header.css',
 })
 export class Header implements OnInit {
-  private userService = inject(UserService);
-
-  currentUser = signal<CurrentUser | null>(null);
+  protected userService = inject(UserService);
 
   ngOnInit(): void {
     this.userService.getCurrentUser().subscribe({
-      next: (user) => this.currentUser.set(user),
       error: (err) => console.error('Failed to load current user', err),
-    })
+    });
   }
 }

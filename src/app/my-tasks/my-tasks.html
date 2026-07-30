@@ -1,7 +1,9 @@
 <div class="page-container">
-  <div class="d-flex justify-content-end mb-4">
-    <button type="button" class="btn btn-secondary" (click)="openNewTaskModal()">Add Task</button>
-  </div>
+  @if (userService.currentUser()?.roleName === 'ADMIN') {
+    <div class="d-flex justify-content-end mb-4">
+      <button type="button" class="btn btn-secondary" (click)="openNewTaskModal()">Add Task</button>
+    </div>
+  }
 
   <div class="row g-2 mb-3">
     <div class="col-auto">
@@ -50,8 +52,10 @@
           <td>{{ getStatusName(task.statusTypeId) }}</td>
           <td>{{ getUserName(task.userId) }}</td>
           <td>
-            <button type="button" class="btn btn-sm btn-danger mr-2" (click)="deleteTask(task)">Delete</button>
-            <button type="button" class="btn btn-sm btn-primary" (click)="openEditTaskModal(task)">Edit</button>
+            @if (userService.currentUser()?.roleName === 'ADMIN') {
+              <button type="button" class="btn btn-sm btn-danger mr-2" (click)="deleteTask(task)">Delete</button>
+              <button type="button" class="btn btn-sm btn-primary" (click)="openEditTaskModal(task)">Edit</button>
+            }
           </td>
         </tr>
       }

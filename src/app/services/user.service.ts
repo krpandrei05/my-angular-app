@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { User } from '../models/user.model';
 import { Credentials, CurrentUser, RegisterCredentials } from '../models/credentials.model';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs';
 import LocalStorageUtils from '../utils/local-storage-utils';
 
 @Injectable({
@@ -13,6 +14,8 @@ export class UserService {
 
   private http = inject(HttpClient);
 
+  currentUser = signal<CurrentUser | null>(null);
+
   getUsers() {
     return this.http.get<User[]>('/users');
   }
@@ -21,7 +24,7 @@ export class UserService {
     const encoded = {
       email: btoa(credentials.email),
       password: btoa(credentials.password),
-    }
+    };
     return this.http.post('/auth/login', encoded, { responseType: 'text' });
   }
 
@@ -32,7 +35,8 @@ export class UserService {
       password: btoa(credentials.password),
       birthDate: credentials.birthDate,
       isInternal: 0,
-      createdBy: credentials.username, };
+      createdBy: credentials.username,
+    };
     return this.http.post('/auth/register', payload, { responseType: 'text' });
   }
 
@@ -42,6 +46,8 @@ export class UserService {
   }
 
   getCurrentUser() {
-    return this.http.get<CurrentUser>('/auth/me');
+    return this.http.get<CurrentUser>('/auth/me').pipe(
+      tap((user) => this.currentUser.set(user))
+    );
   }
 }
