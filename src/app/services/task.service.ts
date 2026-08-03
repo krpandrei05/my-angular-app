@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Task } from '../models/task.model';
 
+export type FileFormat = 'CSV' | 'EXCEL';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -37,5 +39,19 @@ export class TaskService {
     if (filters.dueDate) params = params.set('dueDate', filters.dueDate);
 
     return this.http.get<Task[]>('/tasks/search', { params });
+  }
+
+  exportTasks(format: FileFormat) {
+    const params = new HttpParams().set('format', format);
+    return this.http.get('/tasks/export', {
+      params,
+      responseType: 'blob',
+    });
+  }
+
+  importTasks(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post('/tasks/import', formData);
   }
 }

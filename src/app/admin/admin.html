@@ -1,6 +1,24 @@
 <div class="page-container">
   <h3 class="mb-4">User Management</h3>
 
+  <div class="mb-4 d-flex gap-2">
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-outline-primary" ngbDropdownToggle>Export</button>
+      <div ngbDropdownMenu>
+        <button ngbDropdownItem (click)="exportTasks('CSV')">as CSV</button>
+        <button ngbDropdownItem (click)="exportTasks('EXCEL')">as Excel</button>
+      </div>
+    </div>
+
+    <button class="btn btn-outline-secondary" (click)="triggerImport()">Import</button>
+    <input
+      #fileInput
+      type="file"
+      accept=".csv,.xlsx"
+      hidden
+      (change)="onFileSelected($event)">
+  </div>
+
   <table class="table table-bordered">
     <thead>
     <tr>
