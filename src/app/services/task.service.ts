@@ -1,8 +1,18 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Task } from '../models/task.model';
+import { Page } from '../models/page.model';
 
 export type FileFormat = 'CSV' | 'EXCEL';
+export type SortBy = 'taskId' | 'user' | 'taskName' | 'dueDate';
+export type SortDir = 'ASC' | 'DESC';
+
+export interface PageParams {
+  page: number;
+  size: number;
+  sortBy: SortBy;
+  sortDir: SortDir;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -10,8 +20,9 @@ export type FileFormat = 'CSV' | 'EXCEL';
 export class TaskService {
   private http = inject(HttpClient);
 
-  getTasks() {
-    return this.http.get<Task[]>('/tasks');
+  getTasks(pageParams: PageParams){
+    const params = this.buildPageParams(pageParams);
+    return this.http.get<Page<Task>>('/tasks', { params });
   }
 
   createTask(task: Task) {
@@ -31,14 +42,14 @@ export class TaskService {
     statusName?: string;
     username?: string;
     dueDate?: string;
-  }) {
-    let params = new HttpParams();
+  }, pageParams: PageParams) {
+    let params = this.buildPageParams(pageParams);
     if (filters.taskName) params = params.set('taskName', filters.taskName);
     if (filters.statusName) params = params.set('statusName', filters.statusName);
     if (filters.username) params = params.set('username', filters.username);
     if (filters.dueDate) params = params.set('dueDate', filters.dueDate);
 
-    return this.http.get<Task[]>('/tasks/search', { params });
+    return this.http.get<Page<Task>>('/tasks/search', { params });
   }
 
   exportTasks(format: FileFormat) {
@@ -53,5 +64,13 @@ export class TaskService {
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post('/tasks/import', formData);
+  }
+
+  private buildPageParams(pageParams: PageParams): HttpParams {
+    return new HttpParams()
+      .set('page', pageParams.page)
+      .set('size', pageParams.size)
+      .set('sortBy', pageParams.sortBy)
+      .set('sortDir', pageParams.sortDir)
   }
 }

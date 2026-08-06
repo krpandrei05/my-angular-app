@@ -5,29 +5,51 @@
     </div>
   }
 
-  <div class="row g-2 mb-3">
-    <div class="col-auto">
-      <input type="text" class="form-control" placeholder="Subject" [(ngModel)]="filters.taskName" name="taskName">
+  <div class="d-flex justify-content-between align-items-end flex-wrap mb-3">
+    <div class="row g-2">
+      <div class="col-auto">
+        <input type="text" class="form-control" placeholder="Subject" [(ngModel)]="filters.taskName" name="taskName">
+      </div>
+      <div class="col-auto">
+        <select class="form-control" [(ngModel)]="filters.statusName" name="statusName">
+          <option value="">All statuses</option>
+          @for (status of statusTypes(); track status.statusTypeId) {
+            <option [value]="status.statusName">{{ status.statusName }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-auto">
+        <input type="text" class="form-control" placeholder="Assigned to" [(ngModel)]="filters.username" name="username">
+      </div>
+      <div class="col-auto">
+        <input type="date" class="form-control" [(ngModel)]="filters.dueDate" name="dueDate">
+      </div>
+      <div class="col-auto">
+        <button type="button" class="btn btn-primary" (click)="search()">Search</button>
+      </div>
+      <div class="col-auto">
+        <button type="button" class="btn btn-secondary" (click)="resetFilters()">Reset</button>
+      </div>
     </div>
-    <div class="col-auto">
-      <select class="form-control" [(ngModel)]="filters.statusName" name="statusName">
-        <option value="">All statuses</option>
-        @for (status of statusTypes(); track status.statusTypeId) {
-          <option [value]="status.statusName">{{ status.statusName }}</option>
-        }
-      </select>
-    </div>
-    <div class="col-auto">
-      <input type="text" class="form-control" placeholder="Assigned to" [(ngModel)]="filters.username" name="username">
-    </div>
-    <div class="col-auto">
-      <input type="date" class="form-control" [(ngModel)]="filters.dueDate" name="dueDate">
-    </div>
-    <div class="col-auto">
-      <button type="button" class="btn btn-primary" (click)="search()">Search</button>
-    </div>
-    <div class="col-auto">
-      <button type="button" class="btn btn-secondary" (click)="resetFilters()">Reset</button>
+
+    <div>
+      <label class="d-block small text-muted mb-1">Sort by</label>
+      <div class="row g-2">
+        <div class="col-auto">
+          <select class="form-control" [ngModel]="sortBy()" (ngModelChange)="changeSort($event, sortDir())" name="sortBy">
+            <option value="dueDate">Due Date</option>
+            <option value="taskId">ID</option>
+            <option value="user">User</option>
+            <option value="taskName">Task Name</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <select class="form-control" [ngModel]="sortDir()" (ngModelChange)="changeSort(sortBy(), $event)" name="sortDir">
+            <option value="DESC">Descending</option>
+            <option value="ASC">Ascending</option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -61,4 +83,26 @@
       }
     </tbody>
   </table>
+
+  @if (totalPages() > 0) {
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        [disabled]="currentPage() === 0"
+        (click)="goToPage(currentPage() - 1)">
+        Previous
+      </button>
+
+      <span>Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        [disabled]="currentPage() + 1 >= totalPages()"
+        (click)="goToPage(currentPage() + 1)">
+        Next
+      </button>
+    </div>
+  }
 </div>

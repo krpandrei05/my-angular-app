@@ -1,14 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TaskService } from '../services/task.service';
+import { PageParams, SortBy, SortDir, TaskService } from '../services/task.service';
 import { Task } from '../models/task.model';
 import { StatusTypeService } from '../services/status-type.service';
 import { NewTask } from '../new-task/new-task';
 import { UserService } from '../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { StatusType } from '../models/status-type.model';
-import { Header } from '../header/header';
+import { Page } from '../models/page.model';
 
 @Component({
   selector: 'app-my-tasks',
@@ -24,6 +24,10 @@ export class MyTasks implements OnInit {
 
   tasks = signal<Task[]>([]);
   statusTypes = signal<StatusType[]>([]);
+  currentPage = signal(0);
+  totalPages = signal(0);
+  sortBy = signal<SortBy>('dueDate');
+  sortDir = signal<SortDir>('DESC');
 
   filters = {
     taskName: '',
@@ -41,32 +45,26 @@ export class MyTasks implements OnInit {
 
   loadTasks(): void {
     forkJoin({
-      tasks: this.taskService.getTasks(),
+      tasksPage: this.fetchTasksPage(),
       statuses: this.statusTypeService.getStatuses(),
       users: this.userService.getUsers(),
-    }).subscribe(({ tasks, statuses, users }) => {
+    }).subscribe(({ tasksPage, statuses, users }) => {
       this.statusMap = new Map(statuses.map((s) => [s.statusTypeId, s.statusName]));
       this.statusTypes.set(statuses);
       this.userMap = new Map(users.map((u) => [u.userId, u.username]));
-      const sorted = [...tasks].sort(
-        (a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime(),
-      );
-      this.tasks.set(sorted);
+      this.applyTasksPage(tasksPage);
     });
   }
 
   search(): void {
-    this.taskService.searchTasks(this.filters).subscribe((tasks) => {
-      const sorted = [...tasks].sort(
-        (a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime(),
-      );
-      this.tasks.set(sorted);
-    });
+    this.currentPage.set(0);
+    this.reloadTasksOnly();
   }
 
   resetFilters(): void {
     this.filters = { taskName: '', statusName: '', username: '', dueDate: '' };
-    this.loadTasks();
+    this.currentPage.set(0);
+    this.reloadTasksOnly();
   }
 
   getStatusName(statusTypeId: string): string {
@@ -99,5 +97,71 @@ export class MyTasks implements OnInit {
       return;
     }
     this.taskService.deleteTask(task.taskId).subscribe(() => this.loadTasks());
+  }
+
+  private reloadTasksOnly(): void {
+    this.fetchTasksPage().subscribe((tasksPage) => this.applyTasksPage(tasksPage));
+  }
+
+  goToPage(page: number): void {
+    this.currentPage.set(page);
+    this.reloadTasksOnly();
+  }
+
+  changeSort(sortBy: SortBy, sortDir: SortDir): void {
+    this.sortBy.set(sortBy);
+    this.sortDir.set(sortDir);
+    this.currentPage.set(0);
+    this.reloadTasksOnly();
+  }
+
+  private reloadCurrentPage(): void {
+    const request = this.hasActiveFilters()
+      ? this.taskService.searchTasks(this.filters, this.pageParams())
+      : this.taskService.getTasks(this.pageParams());
+
+    request.subscribe((tasksPage) => {
+      this.tasks.set(tasksPage.content);
+      this.totalPages.set(tasksPage.totalPages);
+    });
+  }
+
+  private pageParams(): PageParams {
+    return {
+      page: this.currentPage(),
+      size: 20,
+      sortBy: this.sortBy(),
+      sortDir: this.sortDir(),
+    };
+  }
+
+  private hasActiveFilters(): boolean {
+    return !!(
+      this.filters.taskName ||
+      this.filters.statusName ||
+      this.filters.username ||
+      this.filters.dueDate
+    );
+  }
+  private fetchTasksPage() {
+    return this.hasActiveFilters()
+      ? this.taskService.searchTasks(this.filters, this.pageParams())
+      : this.taskService.getTasks(this.pageParams());
+  }
+
+  private applyTasksPage(tasksPage: Page<Task>): void {
+    const isPastLastPage =
+      tasksPage.content.length === 0 &&
+      tasksPage.totalPages > 0 &&
+      this.currentPage() >= tasksPage.totalPages;
+
+    if (isPastLastPage) {
+      this.currentPage.set(tasksPage.totalPages - 1);
+      this.reloadTasksOnly();
+      return;
+    }
+
+    this.tasks.set(tasksPage.content);
+    this.totalPages.set(tasksPage.totalPages);
   }
 }
