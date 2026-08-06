@@ -115,17 +115,6 @@ export class MyTasks implements OnInit {
     this.reloadTasksOnly();
   }
 
-  private reloadCurrentPage(): void {
-    const request = this.hasActiveFilters()
-      ? this.taskService.searchTasks(this.filters, this.pageParams())
-      : this.taskService.getTasks(this.pageParams());
-
-    request.subscribe((tasksPage) => {
-      this.tasks.set(tasksPage.content);
-      this.totalPages.set(tasksPage.totalPages);
-    });
-  }
-
   private pageParams(): PageParams {
     return {
       page: this.currentPage(),
